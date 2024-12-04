@@ -19,3 +19,6 @@ func NewTaskDomainService(service *Service, userRepo repo.TaskRepo) *TaskDomainS
 func (u *TaskDomainService) Create(ctx context.Context, task *do.Task) (uid uint, err error) {
 	return u.taskRepo.CreateTask(ctx, task)
 }
+func (u *TaskDomainService) GetTaskByTaskID(ctx context.Context, taskID uint) (*do.Task, error) {
+	return u.taskRepo.FindTaskByTaskID(ctx, taskID)
+}

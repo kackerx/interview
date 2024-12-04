@@ -42,6 +42,8 @@ func registerTaskRouter(g *gin.RouterGroup, taskHandler *handler.TaskHandler, jw
 	AuthRouter := taskRouter.Group("/").Use(middleware.StrictAuth(jwt))
 	{
 		AuthRouter.POST("", taskHandler.CreateTask)
-		AuthRouter.POST("/register", taskHandler.CreateTask)
+		AuthRouter.POST("/:task_id/translate", taskHandler.Translate)
+		AuthRouter.GET("/:task_id", taskHandler.DetailTask)
+		AuthRouter.GET("/:task_id/download", taskHandler.DownTaskFile)
 	}
 }

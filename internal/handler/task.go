@@ -1,6 +1,8 @@
 package handler
 
 import (
+	"strconv"
+
 	"github.com/gin-gonic/gin"
 
 	"github.com/kackerx/interview/api/v1/request"
@@ -35,4 +37,40 @@ func (u *TaskHandler) CreateTask(c *gin.Context) {
 	}
 
 	resp.HandleSuccess(c, ret)
+}
+
+func (u *TaskHandler) Translate(c *gin.Context) {
+	taskID := c.Param("task_id")
+	id, _ := strconv.Atoi(taskID)
+	if err := u.taskAppSvc.TransTask(c, uint(id)); err != nil {
+		resp.HandleErr(c, err)
+	} else {
+		resp.HandleSuccess(c)
+	}
+}
+
+func (u *TaskHandler) DetailTask(c *gin.Context) {
+	taskID := c.Param("task_id")
+	id, _ := strconv.Atoi(taskID)
+
+	task, err := u.taskAppSvc.DetailTask(c, uint(id))
+	if err != nil {
+		resp.HandleErr(c, err)
+		return
+	}
+
+	resp.HandleSuccess(c, task)
+}
+
+func (u *TaskHandler) DownTaskFile(c *gin.Context) {
+	taskID := c.Param("task_id")
+	id, _ := strconv.Atoi(taskID)
+
+	fileName, err := u.taskAppSvc.DownTaskFile(c, uint(id))
+	if err != nil {
+		resp.HandleErr(c, err)
+		return
+	}
+
+	c.File(fileName)
 }

@@ -12,3 +12,11 @@ func DocumentDo2Model(doc *do.Document) *model.Document {
 		CreatedBy: doc.CreatedBy,
 	}
 }
+
+func DocumentModel2Do(doc *model.Document) *do.Document {
+	return &do.Document{
+		TaskID:    doc.TaskID,
+		Content:   doc.Content,
+		CreatedBy: doc.CreatedBy,
+	}
+}
