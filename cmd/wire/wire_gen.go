@@ -33,8 +33,10 @@ func NewWire(cfg *conf.Conf) (*gin.Engine, func(), error) {
 	userHandler := handler.NewUserHandler(handlerHandler, userAppService)
 	taskRepo := data.NewTaskRepo(dataData)
 	taskDomainService := service.NewTaskDomainService(serviceService, taskRepo)
+	documentRepo := data.NewDocumentRepo(dataData)
+	documentDomainService := service.NewDocumentDomainService(serviceService, documentRepo)
 	transaction := data.NewTransaction(dataData)
-	taskAppService := appservice.NewtaskAppService(appService, taskDomainService, transaction)
+	taskAppService := appservice.NewtaskAppService(appService, taskDomainService, documentDomainService, transaction)
 	taskHandler := handler.NewtaskHandler(handlerHandler, taskAppService)
 	engine := server.NewHTTPServer(cfg, jwt, userHandler, taskHandler)
 	return engine, func() {
@@ -43,9 +45,9 @@ func NewWire(cfg *conf.Conf) (*gin.Engine, func(), error) {
 
 // wire.go:
 
-var repositorySet = wire.NewSet(data.NewDb, data.NewData, data.NewUserRepo, data.NewTaskRepo, data.NewTransaction)
+var repositorySet = wire.NewSet(data.NewDb, data.NewData, data.NewUserRepo, data.NewTaskRepo, data.NewTransaction, data.NewDocumentRepo)
 
-var serviceSet = wire.NewSet(service.NewService, service.NewUserDomainService, service.NewTaskDomainService)
+var serviceSet = wire.NewSet(service.NewService, service.NewUserDomainService, service.NewTaskDomainService, service.NewDocumentDomainService)
 
 var appServiceSet = wire.NewSet(appservice.NewAppService, appservice.NewUserAppService, appservice.NewtaskAppService)
 

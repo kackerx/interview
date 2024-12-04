@@ -22,12 +22,14 @@ var repositorySet = wire.NewSet(
 	data.NewUserRepo,
 	data.NewTaskRepo,
 	data.NewTransaction,
+	data.NewDocumentRepo,
 )
 
 var serviceSet = wire.NewSet(
 	service.NewService,
 	service.NewUserDomainService,
 	service.NewTaskDomainService,
+	service.NewDocumentDomainService,
 )
 
 var appServiceSet = wire.NewSet(

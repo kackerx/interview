@@ -14,15 +14,22 @@ import (
 type TaskAppService struct {
 	*AppService
 	taskDomainSvc *service.TaskDomainService
+	docDoaminSvc  *service.DocumentDomainService
 	tm            data.Transaction
 }
 
 func NewtaskAppService(
 	appService *AppService,
 	taskDomainService *service.TaskDomainService,
+	domainService *service.DocumentDomainService,
 	tm data.Transaction,
 ) *TaskAppService {
-	return &TaskAppService{AppService: appService, taskDomainSvc: taskDomainService, tm: tm}
+	return &TaskAppService{
+		AppService:    appService,
+		taskDomainSvc: taskDomainService,
+		tm:            tm,
+		docDoaminSvc:  domainService,
+	}
 }
 
 func (u *TaskAppService) CreateTask(ctx context.Context, req *request.CreateTaskReq, userName string) (resp *reply.CreateTaskResp, err error) {
@@ -30,6 +37,12 @@ func (u *TaskAppService) CreateTask(ctx context.Context, req *request.CreateTask
 	err = u.tm.Transaction(ctx, func(ctx context.Context) error {
 		taskID, err = u.taskDomainSvc.Create(ctx, &do.Task{
 			Status:    enum.TaskStatusCreated,
+			CreatedBy: userName,
+		})
+
+		_, err = u.docDoaminSvc.Create(ctx, &do.Document{
+			TaskID:    taskID,
+			Content:   req.Content,
 			CreatedBy: userName,
 		})
 		return err
