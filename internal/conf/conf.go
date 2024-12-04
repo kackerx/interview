@@ -12,6 +12,7 @@ type Server struct {
 	Name string `mapstructure:"name"`
 	Host string `mapstructure:"host"`
 	Port int    `mapstructure:"port"`
+	Mode string `mapstructure:"mode"`
 }
 
 type Data struct {

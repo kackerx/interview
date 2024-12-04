@@ -31,20 +31,25 @@ func NewWire(cfg *conf.Conf) (*gin.Engine, func(), error) {
 	userDomainService := service.NewUserDomainService(serviceService, userRepo)
 	userAppService := appservice.NewUserAppService(appService, userDomainService)
 	userHandler := handler.NewUserHandler(handlerHandler, userAppService)
-	engine := server.NewHTTPServer(cfg, jwt, userHandler)
+	taskRepo := data.NewTaskRepo(dataData)
+	taskDomainService := service.NewTaskDomainService(serviceService, taskRepo)
+	transaction := data.NewTransaction(dataData)
+	taskAppService := appservice.NewtaskAppService(appService, taskDomainService, transaction)
+	taskHandler := handler.NewtaskHandler(handlerHandler, taskAppService)
+	engine := server.NewHTTPServer(cfg, jwt, userHandler, taskHandler)
 	return engine, func() {
 	}, nil
 }
 
 // wire.go:
 
-var repositorySet = wire.NewSet(data.NewDb, data.NewData, data.NewUserRepo)
+var repositorySet = wire.NewSet(data.NewDb, data.NewData, data.NewUserRepo, data.NewTaskRepo, data.NewTransaction)
 
-var serviceSet = wire.NewSet(service.NewService, service.NewUserDomainService)
+var serviceSet = wire.NewSet(service.NewService, service.NewUserDomainService, service.NewTaskDomainService)
 
-var appServiceSet = wire.NewSet(appservice.NewAppService, appservice.NewUserAppService)
+var appServiceSet = wire.NewSet(appservice.NewAppService, appservice.NewUserAppService, appservice.NewtaskAppService)
 
-var handlerSet = wire.NewSet(handler.NewHandler, handler.NewUserHandler)
+var handlerSet = wire.NewSet(handler.NewHandler, handler.NewUserHandler, handler.NewtaskHandler)
 
 var serverSet = wire.NewSet(server.NewHTTPServer)
 

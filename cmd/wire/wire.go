@@ -20,21 +20,26 @@ var repositorySet = wire.NewSet(
 	data.NewDb,
 	data.NewData,
 	data.NewUserRepo,
+	data.NewTaskRepo,
+	data.NewTransaction,
 )
 
 var serviceSet = wire.NewSet(
 	service.NewService,
 	service.NewUserDomainService,
+	service.NewTaskDomainService,
 )
 
 var appServiceSet = wire.NewSet(
 	appservice.NewAppService,
 	appservice.NewUserAppService,
+	appservice.NewtaskAppService,
 )
 
 var handlerSet = wire.NewSet(
 	handler.NewHandler,
 	handler.NewUserHandler,
+	handler.NewtaskHandler,
 )
 
 var serverSet = wire.NewSet(server.NewHTTPServer)

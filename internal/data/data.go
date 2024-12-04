@@ -1,6 +1,7 @@
 package data
 
 import (
+	"context"
 	"time"
 
 	"gorm.io/driver/mysql"
@@ -8,6 +9,8 @@ import (
 
 	"github.com/kackerx/interview/internal/conf"
 )
+
+const ctxTxKey = "TxKey"
 
 type Data struct {
 	master *gorm.DB
@@ -22,6 +25,21 @@ type Data struct {
 // type SlaveDB struct {
 // 	slave *gorm.DB
 // }
+
+type Transaction interface {
+	Transaction(ctx context.Context, fn func(ctx context.Context) error) error
+}
+
+func NewTransaction(r *Data) Transaction {
+	return r
+}
+
+func (r *Data) Transaction(ctx context.Context, fn func(ctx context.Context) error) error {
+	return r.master.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
+		ctx = context.WithValue(ctx, ctxTxKey, tx)
+		return fn(ctx)
+	})
+}
 
 func NewData(masterDB *gorm.DB) *Data {
 	return &Data{master: masterDB}
