@@ -46,7 +46,7 @@ var handlerSet = wire.NewSet(
 
 var serverSet = wire.NewSet(server.NewHTTPServer)
 
-var commonSet = wire.NewSet(middleware.NewJwt)
+var commonSet = wire.NewSet(middleware.NewJwt, middleware.NewRateLimiter)
 
 func NewWire(cfg *conf.Conf) (*gin.Engine, func(), error) {
 	panic(wire.Build(

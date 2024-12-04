@@ -11,6 +11,7 @@ import (
 func NewHTTPServer(
 	cfg *conf.Conf,
 	jwt *middleware.JWT,
+	limiter *middleware.RateLimiter,
 	userHandler *handler.UserHandler,
 	taskHandler *handler.TaskHandler,
 ) *gin.Engine {
@@ -18,8 +19,10 @@ func NewHTTPServer(
 	// gin.SetMode(gin.DebugMode)
 	gin.SetMode(cfg.Server.Mode)
 
-	// 注册路由
 	v1 := g.Group("/v1")
+	// 限流器
+	v1.Use(middleware.RateLimitMiddleware(limiter))
+	// 注册路由
 	registerUserRouter(v1, userHandler)
 	registerTaskRouter(v1, taskHandler, jwt)
 
@@ -43,7 +46,7 @@ func registerTaskRouter(g *gin.RouterGroup, taskHandler *handler.TaskHandler, jw
 	{
 		AuthRouter.POST("", taskHandler.CreateTask)
 		AuthRouter.POST("/:task_id/translate", taskHandler.Translate)
-		AuthRouter.GET("/:task_id", taskHandler.DetailTask)
+		AuthRouter.GET("/:task_id", taskHandler.DetailTask).Use()
 		AuthRouter.GET("/:task_id/download", taskHandler.DownTaskFile)
 	}
 }

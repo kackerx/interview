@@ -22,6 +22,7 @@ import (
 
 func NewWire(cfg *conf.Conf) (*gin.Engine, func(), error) {
 	jwt := middleware.NewJwt(cfg)
+	rateLimiter := middleware.NewRateLimiter()
 	handlerHandler := handler.NewHandler()
 	appService := appservice.NewAppService()
 	serviceService := service.NewService(jwt)
@@ -38,7 +39,7 @@ func NewWire(cfg *conf.Conf) (*gin.Engine, func(), error) {
 	transaction := data.NewTransaction(dataData)
 	taskAppService := appservice.NewtaskAppService(appService, taskDomainService, documentDomainService, transaction)
 	taskHandler := handler.NewtaskHandler(handlerHandler, taskAppService)
-	engine := server.NewHTTPServer(cfg, jwt, userHandler, taskHandler)
+	engine := server.NewHTTPServer(cfg, jwt, rateLimiter, userHandler, taskHandler)
 	return engine, func() {
 	}, nil
 }
@@ -55,4 +56,4 @@ var handlerSet = wire.NewSet(handler.NewHandler, handler.NewUserHandler, handler
 
 var serverSet = wire.NewSet(server.NewHTTPServer)
 
-var commonSet = wire.NewSet(middleware.NewJwt)
+var commonSet = wire.NewSet(middleware.NewJwt, middleware.NewRateLimiter)
