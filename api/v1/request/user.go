@@ -9,12 +9,10 @@ type RegisterReq struct {
 }
 
 type LoginReq struct {
-	Body struct {
-		UserName string `json:"user_name" binding:"required,e164|email"`
-		Password string `json:"password" binding:"required,min=8"`
-	}
+	UserName string `json:"user_name" binding:"required"`
+	Password string `json:"password" binding:"required,min=8"`
 
-	Header struct {
-		Platform string `json:"platform" binding:"required,oneof=H5 APP"`
-	}
+	// Header struct {
+	// 	Platform string `json:"platform" binding:"required,oneof=H5 APP"`
+	// }
 }

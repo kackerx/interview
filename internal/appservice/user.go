@@ -2,11 +2,12 @@ package appservice
 
 import (
 	"context"
-	"fmt"
+	"time"
 
 	"github.com/kackerx/interview/api/v1/reply"
 	"github.com/kackerx/interview/api/v1/request"
 	"github.com/kackerx/interview/internal/domain/do"
+	"github.com/kackerx/interview/internal/domain/enum"
 	"github.com/kackerx/interview/internal/domain/service"
 )
 
@@ -20,12 +21,28 @@ func NewUserAppService(appService *AppService, userDomainService *service.UserDo
 }
 
 func (u *UserAppService) RegisterUser(ctx context.Context, req *request.RegisterReq) (*reply.RegisterResp, error) {
-	uid, err := u.userDomainSvc.Register(ctx, &do.User{})
+	uid, err := u.userDomainSvc.Register(ctx, &do.User{
+		UserName: req.UserName,
+		Password: req.Password,
+		Email:    req.Email,
+		Status:   enum.UserStatusNormal,
+	})
 	if err != nil {
 		return nil, err
 	}
 
-	fmt.Println(uid)
+	return &reply.RegisterResp{UserID: uid}, nil
+}
 
-	return nil, nil
+func (u *UserAppService) LoginUser(ctx context.Context, req *request.LoginReq) (*reply.LoginResp, error) {
+	token, err := u.userDomainSvc.Login(ctx, req.UserName, req.Password)
+	if err != nil {
+		return nil, err
+	}
+
+	return &reply.LoginResp{
+		Token: token,
+		// Duration:  ,
+		CreatedAt: time.Now().Format(time.DateTime),
+	}, nil
 }

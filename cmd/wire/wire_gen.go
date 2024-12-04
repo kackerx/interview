@@ -28,7 +28,7 @@ func NewWire(cfg *conf.Conf) (*gin.Engine, func(), error) {
 	db := data.NewDb(cfg)
 	dataData := data.NewData(db)
 	userRepo := data.NewUserRepo(dataData)
-	userDomainService := service.NewUserDomainService(serviceService, userRepo)
+	userDomainService := service.NewUserDomainService(serviceService, userRepo, jwt)
 	userAppService := appservice.NewUserAppService(appService, userDomainService)
 	userHandler := handler.NewUserHandler(handlerHandler, userAppService)
 	taskRepo := data.NewTaskRepo(dataData)

@@ -1,5 +1,11 @@
 package reply
 
 type RegisterResp struct {
-	UserID int64 `json:"user_id"`
+	UserID uint `json:"user_id"`
+}
+
+type LoginResp struct {
+	Token     string `json:"token"`
+	Duration  int64  `json:"duration"`
+	CreatedAt string `json:"created_time"`
 }

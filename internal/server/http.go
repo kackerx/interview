@@ -21,7 +21,7 @@ func NewHTTPServer(
 	// 注册路由
 	v1 := g.Group("/v1")
 	registerUserRouter(v1, userHandler)
-	registerTaskRouter(v1, taskHandler)
+	registerTaskRouter(v1, taskHandler, jwt)
 
 	return g
 }
@@ -31,15 +31,15 @@ func registerUserRouter(g *gin.RouterGroup, userHandler *handler.UserHandler) {
 	userRouter := g.Group("/auth")
 	noAuthRouter := userRouter.Group("/")
 	{
-		noAuthRouter.POST("/users", userHandler.Register)
-		noAuthRouter.POST("/login", userHandler.Register)
+		noAuthRouter.POST("/users", userHandler.RegisterUser)
+		noAuthRouter.POST("/login", userHandler.LoginUser)
 	}
 }
 
 // registerTaskRouter 任务路由
-func registerTaskRouter(g *gin.RouterGroup, taskHandler *handler.TaskHandler) {
-	taskRouter := g.Group("/tasks")
-	AuthRouter := taskRouter.Group("/")
+func registerTaskRouter(g *gin.RouterGroup, taskHandler *handler.TaskHandler, jwt *middleware.JWT) {
+	taskRouter := g.Group("/tasks") // Use(middleware.StrictAuth(jwt))
+	AuthRouter := taskRouter.Group("/").Use(middleware.StrictAuth(jwt))
 	{
 		AuthRouter.POST("", taskHandler.CreateTask)
 		AuthRouter.POST("/register", taskHandler.CreateTask)

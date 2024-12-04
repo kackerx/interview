@@ -8,9 +8,11 @@ import (
 	"github.com/kackerx/interview/common/log"
 	"github.com/kackerx/interview/internal/conf"
 	"github.com/kackerx/interview/pkg/http"
+	"github.com/kackerx/interview/pkg/validate"
 )
 
 func main() {
+	validate.InitTrans()
 	cfg := conf.NewConfig()
 	app, clearUp, err := wire.NewWire(cfg)
 	if err != nil {

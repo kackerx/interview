@@ -7,7 +7,7 @@ import (
 )
 
 type UserRepo interface {
-	CreateUser(ctx context.Context) error
+	CreateUser(ctx context.Context, user *do.User) (uint, error)
 	FindUserByName(ctx context.Context, userName string) (*do.User, bool, error)
-	FindUserByID(ctx context.Context, userID string) (*do.User, bool, error)
+	FindUserByID(ctx context.Context, userID uint) (*do.User, bool, error)
 }

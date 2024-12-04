@@ -26,6 +26,16 @@ type Data struct {
 // 	slave *gorm.DB
 // }
 
+func (r *Data) DB(ctx context.Context) *gorm.DB {
+	v := ctx.Value(ctxTxKey)
+	if v != nil {
+		if tx, ok := v.(*gorm.DB); ok {
+			return tx
+		}
+	}
+	return r.master.WithContext(ctx)
+}
+
 type Transaction interface {
 	Transaction(ctx context.Context, fn func(ctx context.Context) error) error
 }

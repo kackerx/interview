@@ -1,9 +1,12 @@
 package handler
 
 import (
+	"fmt"
+
 	"github.com/gin-gonic/gin"
 
 	"github.com/kackerx/interview/api/v1/request"
+	"github.com/kackerx/interview/common/middleware"
 	"github.com/kackerx/interview/common/resp"
 	"github.com/kackerx/interview/internal/appservice"
 )
@@ -18,7 +21,11 @@ func NewtaskHandler(handler *Handler, taskAppSvc *appservice.TaskAppService) *Ta
 }
 
 func (u *TaskHandler) CreateTask(c *gin.Context) {
-	ret, err := u.taskAppSvc.CreateTask(c, &request.CreateTaskReq{}, c.GetString("user_name"))
+	claims, _ := c.Get("claims")
+	user := claims.(*middleware.MyCustomClaims)
+
+	fmt.Println(user)
+	ret, err := u.taskAppSvc.CreateTask(c, &request.CreateTaskReq{}, user.UserName)
 	if err != nil {
 		resp.HandleErr(c, err)
 		return
