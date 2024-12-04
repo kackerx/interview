@@ -21,7 +21,7 @@ func NewHTTPServer(
 
 	v1 := g.Group("/v1")
 	// 限流器
-	v1.Use(middleware.RateLimitMiddleware(limiter))
+	v1.Use(middleware.LogAccess(), middleware.GinPanicRecovery(), middleware.RateLimitMiddleware(limiter))
 	// 注册路由
 	registerUserRouter(v1, userHandler)
 	registerTaskRouter(v1, taskHandler, jwt)
