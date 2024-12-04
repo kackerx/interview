@@ -1,2 +1,25 @@
+server:
+  name: "go-interview"
+  host: 0.0.0.0
+  port: 8080
+
+data:
+  db:
+    master:
+      dsn: "root:Wasd4044@tcp(127.0.0.1:3306)/todo?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai"
+      max_open: 100
+      max_idle: 10
+      max_life_time: 5
+    slave:
+      dsn: "root:Wasd4044@tcp(127.0.0.1:3306)/go_ex?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai"
+      max_open: 100
+      max_idle: 10
+      max_life_time: 5
+  redis:
+    addr: "127.0.0.1:6379"
+    password: ""
+    pool_size: 10
+    db: 0
+
 security:
-  jwt.key: QQYnRFerJTSEcrfB89fw8prOaObmrch8
+  jwtkey: QQYnRFerJTSEcrfB89fw8prOaObmrch8
