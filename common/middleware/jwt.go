@@ -6,11 +6,11 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/spf13/viper"
 
 	"github.com/kackerx/interview/common/code"
 	"github.com/kackerx/interview/common/log"
 	"github.com/kackerx/interview/common/resp"
+	"github.com/kackerx/interview/internal/conf"
 )
 
 type JWT struct {
@@ -22,8 +22,8 @@ type MyCustomClaims struct {
 	jwt.RegisteredClaims
 }
 
-func NewJwt(conf *viper.Viper) *JWT {
-	return &JWT{key: []byte(conf.GetString("security.jwt.key"))}
+func NewJwt(conf *conf.Conf) *JWT {
+	return &JWT{key: []byte(conf.Security.Jwtkey)}
 }
 
 func (j *JWT) GenToken(userId string, expiresAt time.Time) (string, error) {

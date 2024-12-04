@@ -6,12 +6,12 @@ server:
 data:
   db:
     master:
-      dsn: "root:Wasd4044@tcp(127.0.0.1:3306)/todo?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai"
+      dsn: "root:Wasd4044@tcp(127.0.0.1:3306)/go_mall?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai"
       max_open: 100
       max_idle: 10
       max_life_time: 5
     slave:
-      dsn: "root:Wasd4044@tcp(127.0.0.1:3306)/go_ex?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai"
+      dsn: "root:Wasd4044@tcp(127.0.0.1:3306)/go_mall?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai"
       max_open: 100
       max_idle: 10
       max_life_time: 5
